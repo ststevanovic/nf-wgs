@@ -1,9 +1,9 @@
+// TODO: define
 bwa_index = bwa_index_amb.merge(bwa_index_ann, bwa_index_bwt, bwa_index_pac, bwa_index_sa)
 bwa = reads_bwa.combine(bwa_index)
 
 process BWA {
     tag "$reads"
-    container 'gatk:latest'
 
     input:
     set val(name), file(reads), file(fasta), file(amb), file(ann), file(bwt), file(pac), file(sa) from bwa
@@ -16,9 +16,10 @@ process BWA {
     """
 }
 
-process MarkDuplicates {
+// TODO: into params
+
+process MARKDUPLICATES {
   tag "$bam_sort"
-  container 'broadinstitute/gatk:latest'
 
   input:
   set val(name), file(bam_sort) from bam_sort
@@ -36,9 +37,8 @@ process MarkDuplicates {
 baserecalibrator_index = fasta_baserecalibrator.merge(fai_baserecalibrator, dict_baserecalibrator, dbsnp, dbsnp_idx, golden_indel, golden_indel_idx)
 baserecalibrator = bam_markdup_baserecalibrator.combine(baserecalibrator_index)
 
-process BaseRecalibrator {
+process BASERECALIBRATOR {
   tag "$bam_markdup"
-  container 'broadinstitute/gatk:latest'
 
   input:
   set val(name), file(bam_markdup), file(fasta), file(fai), file(dict), file(dbsnp), file(dbsnp_idx), file(golden_indel), file(golden_indel_idx) from baserecalibrator

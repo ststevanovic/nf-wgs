@@ -1,24 +1,22 @@
 nextflow.enable.dsl=2
 
-params.reads = "$baseDir/data/reads/*_ercc_{1,2}.fq.gz"
-params.multiqc = "$baseDir/results/multiqc"
-params.outdir = "$baseDir/results"
-
 log.info """\
          W G S - N F   P I P E L I N E    
          ===================================
          reads        : ${params.reads}
-         multiqc      : ${params.multiqc}
+         multiqc      : ${params.outmultiqc}
          outdir       : ${params.outdir}
          """
          .stripIndent()
 
-include { FASTQC } from 'modules/fastqc/fastqc.nf'
-// include { BWA } from 'modules/bwa/bwa.nf'
+include { FASTQC } from './modules/fastqc/fastqc.nf'
+include { BWA } from 'modules/bwa/bwa.nf'
+include { MARKDUPLICATES } from 'modules/bwa/bwa.nf'
+include { BASERECALIBRATOR } from 'modules/bwa/bwa.nf'
 // include { SAMTOOLS } from 'modules/samtools/samtools.nf'
 // include { QUALIMAP } from 'modules/qualimap/qualimap.nf'
 // include { HAPOLOTYPER } from 'modules/haplotyper/haplotyper.nf'
-// include { MULTIQC } from 'modules/multiqc/multiqc.nf'
+include { MULTIQC } from './modules/multiqc/multiqc.nf'
 
 // unnamed 
 workflow { 
@@ -28,20 +26,22 @@ workflow {
 
     fastqc_ch = FASTQC( read_pairs_ch )
 
-    // bwa x3 processes
+    // TODO: bwa x3 processes
+    bwa_ch = BWA( fastqc_ch )
+    markduplicates_ch = MARKDUPLICATES( bwa_ch )
+    baserecalibrator_ch = BASERECALIBRATOR( markduplicates_ch )
+    // TODO: samtools
+    
+    // TODO: qualimap
 
-    // samtools
+    // TODO: haplotyper
 
-    // qualimap
+    // TODO: ...
 
-    // haplotyper
-
-    // ...
-
-    // multiqc
+    MULTIQC(fastqc_ch.mix(baserecalibrator_ch))
 }
 
-// // named 
+// TODO: named 
 // workflow EXAMPLE {
 //   take:
 //     transcriptome
@@ -57,5 +57,9 @@ workflow {
 // }
 
 workflow.onComplete {
-    log.info ( workflow.success ? "\nDone! Open the following report in your browser --> $params.outdir/multiqc_report.html\n" : "Oops .. something went wrong" )
+    log.info ( workflow.success ? "\nDone! Open the following report in your browser --> $params.outdir/multiqc_report.html\n" : null)
+}
+
+workflow.onError {
+    log.info "Oops... Pipeline execution stopped with the following message: ${workflow.errorMessage}"
 }

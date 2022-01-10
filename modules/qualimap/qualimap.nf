@@ -15,16 +15,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
-params.help   = null
-params.multiqc_config = 'NO_FILE'
-params.feature_file   = 'NO_FILE'
-params.cpu = 1
-params.mem = 40
-params.input_folder = null
-params.outdir = "."
-params.output_format = "html"
-
 log.info ""
 log.info "----------------------------------------------------------------"
 log.info "           Quality control with Qualimap and MultiQC           "
