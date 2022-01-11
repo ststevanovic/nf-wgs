@@ -1,8 +1,9 @@
 .nextflow/
 work/
-data/
 results/
 .nextflow.log*
+.nextflow*
 .vscode/
+
 
 logs/

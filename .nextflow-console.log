@@ -1,3 +1,0 @@
-Jan-11 14:54:53.305 [main] DEBUG nextflow.config.ConfigBuilder - Found config local: /home/strahinja/APIS/wgs/nextflow.config
-Jan-11 14:54:53.310 [main] DEBUG nextflow.config.ConfigBuilder - Parsing config file: /home/strahinja/APIS/wgs/nextflow.config
-Jan-11 14:54:53.348 [main] DEBUG nextflow.config.ConfigBuilder - Applying config profile: `standard`
