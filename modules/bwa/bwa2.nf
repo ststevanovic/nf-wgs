@@ -1,5 +1,7 @@
 #!/usr/bin/env nextflow
 
+// *** NOT USED IN THIS PIPELINE... ***
+
 // use dsl2
 
 params.reads = "$baseDir/data/reads/*_ercc_{1,2}.fq.gz"

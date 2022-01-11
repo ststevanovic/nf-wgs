@@ -4,6 +4,9 @@
 FASTQC_IMAGE_NAME="fastqc:v0.11.9"
 FASTQC_CONTAINER_DIR="fastqc"
 
+BWA_IMAGE_NAME="bwa:v0.7.17"
+BWA_CONTAINER_DIR="bwa"
+
 SAMTOOLS_IMAGE_NAME="samtools:v0.11.9"
 SAMTOOLS_CONTAINER_DIR="samtools"
 
@@ -12,6 +15,10 @@ MULTIQC_CONTAINER_DIR="multiqc"
 
 cd $FASTQC_CONTAINER_DIR
 docker build -t $FASTQC_IMAGE_NAME .
+cd ..
+
+cd $BWA_CONTAINER_DIR
+docker build -t $BWA_IMAGE_NAME .
 cd ..
 
 cd $GATK_CONTAINER_DIR

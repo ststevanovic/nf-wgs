@@ -1,77 +1,79 @@
-Jan-10 14:11:34.266 [main] DEBUG nextflow.cli.Launcher - $> nextflow -log logs/main.log run main.nf --resume
-Jan-10 14:11:34.374 [main] INFO  nextflow.cli.CmdRun - N E X T F L O W  ~  version 21.10.5
-Jan-10 14:11:34.411 [main] INFO  nextflow.cli.CmdRun - Launching `main.nf` [mighty_lumiere] - revision: e5ff87eaf1
-Jan-10 14:11:34.430 [main] DEBUG nextflow.config.ConfigBuilder - Found config local: /home/strahinja/APIS/wgs/nextflow.config
-Jan-10 14:11:34.432 [main] DEBUG nextflow.config.ConfigBuilder - Parsing config file: /home/strahinja/APIS/wgs/nextflow.config
-Jan-10 14:11:34.477 [main] DEBUG nextflow.config.ConfigBuilder - Applying config profile: `standard`
-Jan-10 14:11:35.903 [main] DEBUG nextflow.plugin.PluginsFacade - Setting up plugin manager > mode=prod; plugins-dir=/home/strahinja/.nextflow/plugins
-Jan-10 14:11:35.907 [main] DEBUG nextflow.plugin.PluginsFacade - Plugins default=[]
-Jan-10 14:11:35.937 [main] INFO  org.pf4j.DefaultPluginStatusProvider - Enabled plugins: []
-Jan-10 14:11:35.943 [main] INFO  org.pf4j.DefaultPluginStatusProvider - Disabled plugins: []
-Jan-10 14:11:35.958 [main] INFO  org.pf4j.DefaultPluginManager - PF4J version 3.4.1 in 'deployment' mode
-Jan-10 14:11:35.988 [main] INFO  org.pf4j.AbstractPluginManager - No plugins
-Jan-10 14:11:36.138 [main] DEBUG nextflow.Session - Session uuid: f5442574-8503-49fe-bd9e-2f5b2b766888
-Jan-10 14:11:36.139 [main] DEBUG nextflow.Session - Run name: mighty_lumiere
-Jan-10 14:11:36.143 [main] DEBUG nextflow.Session - Executor pool size: 8
-Jan-10 14:11:36.308 [main] DEBUG nextflow.cli.CmdRun - 
+Jan-10 15:06:14.245 [main] DEBUG nextflow.cli.Launcher - $> nextflow -log logs/main.log run main.nf --resume
+Jan-10 15:06:14.348 [main] INFO  nextflow.cli.CmdRun - N E X T F L O W  ~  version 21.10.5
+Jan-10 15:06:14.381 [main] INFO  nextflow.cli.CmdRun - Launching `main.nf` [deadly_bell] - revision: 7a047f8cae
+Jan-10 15:06:14.405 [main] DEBUG nextflow.config.ConfigBuilder - Found config local: /home/strahinja/APIS/wgs/nextflow.config
+Jan-10 15:06:14.406 [main] DEBUG nextflow.config.ConfigBuilder - Parsing config file: /home/strahinja/APIS/wgs/nextflow.config
+Jan-10 15:06:14.440 [main] DEBUG nextflow.config.ConfigBuilder - Applying config profile: `standard`
+Jan-10 15:06:15.984 [main] DEBUG nextflow.plugin.PluginsFacade - Setting up plugin manager > mode=prod; plugins-dir=/home/strahinja/.nextflow/plugins
+Jan-10 15:06:15.988 [main] DEBUG nextflow.plugin.PluginsFacade - Plugins default=[]
+Jan-10 15:06:16.022 [main] INFO  org.pf4j.DefaultPluginStatusProvider - Enabled plugins: []
+Jan-10 15:06:16.024 [main] INFO  org.pf4j.DefaultPluginStatusProvider - Disabled plugins: []
+Jan-10 15:06:16.037 [main] INFO  org.pf4j.DefaultPluginManager - PF4J version 3.4.1 in 'deployment' mode
+Jan-10 15:06:16.074 [main] INFO  org.pf4j.AbstractPluginManager - No plugins
+Jan-10 15:06:16.253 [main] DEBUG nextflow.Session - Session uuid: 8d33b5e6-c4a1-4ff0-a312-79a0e1e41bc3
+Jan-10 15:06:16.253 [main] DEBUG nextflow.Session - Run name: deadly_bell
+Jan-10 15:06:16.254 [main] DEBUG nextflow.Session - Executor pool size: 8
+Jan-10 15:06:16.292 [main] DEBUG nextflow.cli.CmdRun - 
   Version: 21.10.5 build 5658
   Created: 08-12-2021 14:39 UTC (15:39 CEST)
   System: Linux 5.4.0-92-generic
   Runtime: Groovy 3.0.9 on OpenJDK 64-Bit Server VM 11.0.13+8-Ubuntu-0ubuntu1.18.04
   Encoding: UTF-8 (UTF-8)
-  Process: 25817@strahinja-ThinkPad-W530 [127.0.1.1]
-  CPUs: 8 - Mem: 7.6 GB (168 MB) - Swap: 2 GB (1.9 GB)
-Jan-10 14:11:36.332 [main] DEBUG nextflow.Session - Work-dir: /home/strahinja/APIS/wgs/work [ext2/ext3]
-Jan-10 14:11:36.333 [main] DEBUG nextflow.Session - Script base path does not exist or is not a directory: /home/strahinja/APIS/wgs/bin
-Jan-10 14:11:36.342 [main] DEBUG nextflow.executor.ExecutorFactory - Extension executors providers=[]
-Jan-10 14:11:36.356 [main] DEBUG nextflow.Session - Observer factory: DefaultObserverFactory
-Jan-10 14:11:36.403 [main] DEBUG nextflow.util.CustomThreadPool - Creating default thread pool > poolSize: 9; maxThreads: 1000
-Jan-10 14:11:36.478 [main] DEBUG nextflow.Session - Session start invoked
-Jan-10 14:11:36.738 [main] DEBUG nextflow.script.ScriptRunner - > Launching execution
-Jan-10 14:11:36.760 [main] INFO  nextflow.Nextflow - W G S - N F   P I P E L I N E    
+  Process: 32534@strahinja-ThinkPad-W530 [127.0.1.1]
+  CPUs: 8 - Mem: 7.6 GB (387.7 MB) - Swap: 2 GB (1.9 GB)
+Jan-10 15:06:16.323 [main] DEBUG nextflow.Session - Work-dir: /home/strahinja/APIS/wgs/work [ext2/ext3]
+Jan-10 15:06:16.323 [main] DEBUG nextflow.Session - Script base path does not exist or is not a directory: /home/strahinja/APIS/wgs/bin
+Jan-10 15:06:16.334 [main] DEBUG nextflow.executor.ExecutorFactory - Extension executors providers=[]
+Jan-10 15:06:16.349 [main] DEBUG nextflow.Session - Observer factory: DefaultObserverFactory
+Jan-10 15:06:16.392 [main] DEBUG nextflow.util.CustomThreadPool - Creating default thread pool > poolSize: 9; maxThreads: 1000
+Jan-10 15:06:16.467 [main] DEBUG nextflow.Session - Session start invoked
+Jan-10 15:06:16.727 [main] DEBUG nextflow.script.ScriptRunner - > Launching execution
+Jan-10 15:06:16.763 [main] INFO  nextflow.Nextflow - W G S - N F   P I P E L I N E    
 ===================================
 reads        : /home/strahinja/APIS/wgs/data/reads/*_ercc_{1,2}.fq.gz
 multiqc      : /home/strahinja/APIS/wgs/results/multiqc
 outdir       : /home/strahinja/APIS/wgs/results/TEST
 
-Jan-10 14:11:37.029 [main] DEBUG nextflow.util.CustomThreadPool - Creating default thread pool > poolSize: 9; maxThreads: 1000
-Jan-10 14:11:37.186 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withName:FASTQC` matches process FASTQC
-Jan-10 14:11:37.199 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
-Jan-10 14:11:37.200 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
-Jan-10 14:11:37.207 [main] DEBUG nextflow.executor.Executor - [warm up] executor > local
-Jan-10 14:11:37.213 [main] DEBUG n.processor.LocalPollingMonitor - Creating local task monitor for executor 'local' > cpus=8; memory=7.6 GB; capacity=8; pollInterval=100ms; dumpInterval=5m
-Jan-10 14:11:37.313 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withName:MULTIQC` matches process MULTIQC
-Jan-10 14:11:37.315 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
-Jan-10 14:11:37.316 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
-Jan-10 14:11:37.322 [main] DEBUG nextflow.Session - Workflow process names [dsl2]: FASTQC, MULTIQC
-Jan-10 14:11:37.334 [main] WARN  nextflow.Session - There's no process matching config selector: SAMTOOLS
-Jan-10 14:11:37.336 [main] WARN  nextflow.Session - There's no process matching config selector: QUALIMAP
-Jan-10 14:11:37.337 [main] DEBUG nextflow.Session - Ignite dataflow network (3)
-Jan-10 14:11:37.344 [PathVisitor-1] DEBUG nextflow.file.PathVisitor - files for syntax: glob; folder: /home/strahinja/APIS/wgs/data/reads/; pattern: *_ercc_{1,2}.fq.gz; options: [checkIfExists:true]
-Jan-10 14:11:37.345 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > FASTQC
-Jan-10 14:11:37.346 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > MULTIQC
-Jan-10 14:11:37.347 [main] DEBUG nextflow.script.ScriptRunner - > Await termination 
-Jan-10 14:11:37.347 [main] DEBUG nextflow.Session - Session await
-Jan-10 14:11:37.595 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-Jan-10 14:11:37.600 [Task submitter] INFO  nextflow.Session - [4c/961458] Submitted process > FASTQC (FASTQC on test_rna)
-Jan-10 14:11:37.613 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-Jan-10 14:11:37.613 [Task submitter] INFO  nextflow.Session - [fb/0c52e3] Submitted process > FASTQC (FASTQC on test_dna)
-Jan-10 14:11:44.169 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 2; name: FASTQC (FASTQC on test_dna); status: COMPLETED; exit: 0; error: -; workDir: /home/strahinja/APIS/wgs/work/fb/0c52e3676abac310a28edfb691fe28]
-Jan-10 14:11:44.239 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-Jan-10 14:11:44.240 [Task submitter] INFO  nextflow.Session - [bd/72f58b] Submitted process > MULTIQC (1)
-Jan-10 14:11:44.258 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 1; name: FASTQC (FASTQC on test_rna); status: COMPLETED; exit: 0; error: -; workDir: /home/strahinja/APIS/wgs/work/4c/961458e1825c03b02eafc76cf2b219]
-Jan-10 14:11:48.826 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 3; name: MULTIQC (1); status: COMPLETED; exit: 0; error: -; workDir: /home/strahinja/APIS/wgs/work/bd/72f58b82fcb3b8f18aadb62dfce66a]
-Jan-10 14:11:48.831 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
-Jan-10 14:11:48.832 [Task submitter] INFO  nextflow.Session - [56/8dca83] Submitted process > MULTIQC (2)
-Jan-10 14:11:48.968 [Task monitor] DEBUG nextflow.processor.TaskProcessor - Process MULTIQC > Skipping output binding because one or more optional files are missing: fileoutparam<2>
-Jan-10 14:11:48.974 [Task monitor] DEBUG n.util.BlockingThreadExecutorFactory - Thread pool name=FileTransfer; maxThreads=24; maxQueueSize=72; keepAlive=1m
-Jan-10 14:11:53.044 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 4; name: MULTIQC (2); status: COMPLETED; exit: 0; error: -; workDir: /home/strahinja/APIS/wgs/work/56/8dca8388d436f8f220e0489f3df94b]
-Jan-10 14:11:53.050 [Task monitor] DEBUG nextflow.processor.TaskProcessor - Process MULTIQC > Skipping output binding because one or more optional files are missing: fileoutparam<2>
-Jan-10 14:11:53.054 [main] DEBUG nextflow.Session - Session await > all process finished
-Jan-10 14:11:53.056 [main] DEBUG nextflow.Session - Session await > all barriers passed
-Jan-10 14:11:53.058 [main] INFO  nextflow.Nextflow - 
-Done! Open the following report in your browser --> /home/strahinja/APIS/wgs/results/TEST/multiqc_report.html
-
-Jan-10 14:11:53.066 [main] DEBUG nextflow.trace.WorkflowStatsObserver - Workflow completed > WorkflowStats[succeededCount=4; failedCount=0; ignoredCount=0; cachedCount=0; pendingCount=0; submittedCount=0; runningCount=0; retriesCount=0; abortedCount=0; succeedDuration=43.5s; failedDuration=0ms; cachedDuration=0ms;loadCpus=0; loadMemory=0; peakRunning=2; peakCpus=4; peakMemory=6 GB; ]
-Jan-10 14:11:53.182 [main] DEBUG nextflow.CacheDB - Closing CacheDB done
-Jan-10 14:11:53.202 [main] DEBUG nextflow.script.ScriptRunner - > Execution complete -- Goodbye
+Jan-10 15:06:17.053 [main] DEBUG nextflow.Session - Session aborted -- Cause: No such property: bwa_index_amb for class: Script_4be38aa5
+Jan-10 15:06:17.073 [main] ERROR nextflow.cli.Launcher - @unknown
+groovy.lang.MissingPropertyException: No such property: bwa_index_amb for class: Script_4be38aa5
+	at org.codehaus.groovy.runtime.ScriptBytecodeAdapter.unwrap(ScriptBytecodeAdapter.java:65)
+	at org.codehaus.groovy.runtime.callsite.PogoGetPropertySite.getProperty(PogoGetPropertySite.java:51)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.callGroovyObjectGetProperty(AbstractCallSite.java:341)
+	at Script_4be38aa5.runScript(Script_4be38aa5:2)
+	at nextflow.script.BaseScript.runDsl2(BaseScript.groovy:169)
+	at nextflow.script.BaseScript.run(BaseScript.groovy:200)
+	at nextflow.script.ScriptParser.runScript(ScriptParser.groovy:221)
+	at nextflow.script.ScriptParser.runScript(ScriptParser.groovy:207)
+	at nextflow.script.ScriptParser.runScript(ScriptParser.groovy:201)
+	at nextflow.script.IncludeDef.memoizedMethodPriv$loadModule0PathMapSession(IncludeDef.groovy:142)
+	at nextflow.script.IncludeDef.access$0(IncludeDef.groovy)
+	at nextflow.script.IncludeDef$__clinit__closure1.doCall(IncludeDef.groovy)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaMethod.doMethodInvoke(MetaMethod.java:323)
+	at org.codehaus.groovy.runtime.metaclass.ClosureMetaClass.invokeMethod(ClosureMetaClass.java:274)
+	at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:1035)
+	at groovy.lang.Closure.call(Closure.java:412)
+	at org.codehaus.groovy.runtime.memoize.Memoize$MemoizeFunction.lambda$call$0(Memoize.java:137)
+	at org.codehaus.groovy.runtime.memoize.ConcurrentCommonCache.getAndPut(ConcurrentCommonCache.java:137)
+	at org.codehaus.groovy.runtime.memoize.ConcurrentCommonCache.getAndPut(ConcurrentCommonCache.java:113)
+	at org.codehaus.groovy.runtime.memoize.Memoize$MemoizeFunction.call(Memoize.java:136)
+	at nextflow.script.IncludeDef.loadModule0(IncludeDef.groovy)
+	at nextflow.script.IncludeDef.load0(IncludeDef.groovy:114)
+	at nextflow.script.IncludeDef$load0$1.call(Unknown Source)
+	at org.codehaus.groovy.runtime.callsite.CallSiteArray.defaultCall(CallSiteArray.java:47)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.call(AbstractCallSite.java:125)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.call(AbstractCallSite.java:139)
+	at Script_b2e0bc0a.runScript(Script_b2e0bc0a:13)
+	at nextflow.script.BaseScript.runDsl2(BaseScript.groovy:169)
+	at nextflow.script.BaseScript.run(BaseScript.groovy:200)
+	at nextflow.script.ScriptParser.runScript(ScriptParser.groovy:221)
+	at nextflow.script.ScriptRunner.run(ScriptRunner.groovy:212)
+	at nextflow.script.ScriptRunner.execute(ScriptRunner.groovy:120)
+	at nextflow.cli.CmdRun.run(CmdRun.groovy:308)
+	at nextflow.cli.Launcher.run(Launcher.groovy:480)
+	at nextflow.cli.Launcher.main(Launcher.groovy:639)

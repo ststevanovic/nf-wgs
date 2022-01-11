@@ -5,9 +5,8 @@ ENV \
     VER=1.14
 
 LABEL \
-    version=$VER \
     software="samtools" \
-    software.version="0.11.9" \
+    software.version=$VER \
     about.summary="A a suite of programs for interacting with high-throughput sequencing data." \
     about.home="http://www.htslib.org/" \
     about.documentation="http://www.htslib.org/doc/" \
