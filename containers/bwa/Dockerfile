@@ -1,9 +1,9 @@
 ################## BASE IMAGE ######################
-FROM ubuntu:latest
+FROM ubuntu:20.04.3 
 
 ################## METADATA ######################
 LABEL  \
-    base_image="ubuntu:latest" \
+    base_image="ubuntu:20.04.3" \
     software="bwa" \
     software.version="0.7.17" \
     about.summary="Burrows Weeler Aligner is a software package for mapping low-divergent sequences against a large reference genome, such as the human genome." \

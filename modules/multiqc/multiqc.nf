@@ -19,12 +19,22 @@ process MULTIQC {
 //         file ('VCFTools/*') from vcftoolsReport.collect().ifEmpty([])
     
     output:
-    path "*multiqc_report.html", emit: report
-    path "*_data"              , emit: data
-    path "*_plots"             , optional:true, emit: plots
+    path "*multiqc_report.html"                ,emit: report
+    path "*_data"                              ,emit: data
+    path "*_plots"              ,optional:true ,emit: plots
+    path "versions.yml"                        ,emit: versions
 
     shell:
     '''
     multiqc -v .
     '''
 }
+
+// process MULTIQC_VERSION {
+//     // if params version specified, run this
+
+//     shell:
+//     '''
+//     multiqc --version
+//     '''
+// }

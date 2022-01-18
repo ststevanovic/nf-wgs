@@ -5,5 +5,5 @@ results/
 .nextflow*
 .vscode/
 
-
+test.nf
 logs/

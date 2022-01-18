@@ -10,8 +10,13 @@ BWA_CONTAINER_DIR="bwa"
 SAMTOOLS_IMAGE_NAME="samtools:v0.11.9"
 SAMTOOLS_CONTAINER_DIR="samtools"
 
+BWASAM_IMAGE_NAME="bwa-sam:latest"
+BWASAM_CONTAINER_DIR="multiqc"
+
+# TODO: change to version
 MULTIQC_IMAGE_NAME="multiqc:latest"
 MULTIQC_CONTAINER_DIR="multiqc"
+
 
 cd $FASTQC_CONTAINER_DIR
 docker build -t $FASTQC_IMAGE_NAME .
@@ -21,8 +26,8 @@ cd $BWA_CONTAINER_DIR
 docker build -t $BWA_IMAGE_NAME .
 cd ..
 
-cd $GATK_CONTAINER_DIR
-docker build -t $GATK_IMAGE_NAME .
+cd $BWASAM_CONTAINER_DIR
+docker build -t $BWASAM_IMAGE_NAME .
 cd ..
 
 cd $SAMTOOLS_CONTAINER_DIR

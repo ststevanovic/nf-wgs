@@ -11,27 +11,31 @@ log.info """\
          .stripIndent()
 
 // include { FASTQC } from './modules/fastqc/fastqc.nf'
-include { BWA } from './modules/bwa/bwa.nf'
-// include { BWA_MEM } from './modules/bwa/bwa.nf'
-// include { MARKDUPLICATES } from './modules/bwa/bwa.nf'
-// include { BASERECALIBRATOR } from './modules/bwa/bwa.nf'
+include { BWA } from './modules/bwamem/bwa.nf'
+include { BWA_MEM } from './modules/bwamem/bwa.nf'
+// include { MARKDUPLICATES } from './modules/bwamem/bwa.nf'
+// include { BASERECALIBRATOR } from './modules/bwamem/bwa.nf'
 // include { SAMTOOLS_REPORT } from 'modules/samtools/samtools.nf'
 // include { QUALIMAP } from 'modules/qualimap/qualimap.nf'
 // include { HAPOLOTYPER } from 'modules/haplotyper/haplotyper.nf'
-include { MULTIQC } from './modules/multiqc/multiqc.nf'
+// include { MULTIQC } from './modules/multiqc/multiqc.nf'
 
 // unnamed 
 workflow { 
-    // channel
-    // .fromFilePairs( params.reads, checkIfExists: true )
-    // .set { read_pairs_ch }
-    // fastqc_ch = FASTQC( read_pairs_ch )
+    // channels
+    channel
+    .fromFilePairs( params.reads, checkIfExists: true )
+    .set { read_pairs_ch }
 
-    // TODO: Create index files
     channel.fromPath(params.reference_genome).set{ data }
-    BWA(data)
+
+    // modules
+    fastqc_ch = FASTQC ( read_pairs_ch )
+
+    // indexing (pre)
+    BWA ( data )
     // TODO: bwa x3 processes
-    // bwa_ch = BWA( fastqc_ch )
+    // bwa_ch = BWA_MEM ( fastqc_ch )
     // markduplicates_ch = MARKDUPLICATES( bwa_ch )
     // baserecalibrator_ch = BASERECALIBRATOR( markduplicates_ch )
     // TODO: samtools
@@ -42,7 +46,7 @@ workflow {
 
     // TODO: ...
 
-    // MULTIQC(fastqc_ch.mix(baserecalibrator_ch))
+    // MULTIQC(fastqc_ch.mix(bwa_ch))
 }
 
 // TODO: named 

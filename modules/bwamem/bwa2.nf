@@ -31,7 +31,3 @@ process index {
     bwa-mem2 index --threads $task.cpus -t $transcriptome -i index
     """
 }
-
-// workflow {
-    
-// }

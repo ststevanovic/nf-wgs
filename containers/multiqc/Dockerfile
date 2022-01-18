@@ -1,10 +1,10 @@
 ################## BASE IMAGE ######################
-FROM ubuntu:latest
+FROM ubuntu:20.04.3
 
 ################## METADATA ######################
 LABEL  \
     base_image="ubuntu" \
-    version="latest" \
+    version="20.04.3" \
     software="multiqc" \
     software.version="1.11" \
     about.summary="Aggregate results from bioinformatics analyses across many samples into a single report." \

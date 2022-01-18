@@ -2,18 +2,29 @@
  * Process : Create a FASTA genome index with samtools
  */
 
-process SAMTOOLS_PREPARE_GENOME { 
+process SAMTOOLS_FAIDX { 
+  
   input:
-  // ???
-  file genome from params.genome
+  
+  file genome 
 
   output:
-  path "${genome}.fai" into genome_index_ch 
-  //??? bwa_index_amb, bwa_index_ann, bwa_index_bwt, bwa_index_pac, bwa_index_sa
+  //  genome_index_ch 
+  path "${genome}.fai", emit genome_index_fai
 
   script:
   """
   samtools faidx ${genome}
+  """
+}
+process SAMTOOLS_SORT_BAM {
+  input:
+  
+  output:
+
+  script:
+  """
+  samtools sort ${input}.sam -o ${input}_sorted.bam
   """
 }
 
