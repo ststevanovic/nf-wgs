@@ -9,7 +9,7 @@ It deduplicates...
 
     GATK verison: v1.0
     BWA version:
-    Software requirements: { checkout docker file } // read from yarn ?
+    Software requirements: { checkout docker file } // read from yml ?
 
 ## Inputs
 
