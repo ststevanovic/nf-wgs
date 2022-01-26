@@ -8,11 +8,23 @@ nextflow.enable.dsl=2
  #### Homepage / Documentation
  https://github.com/lifebit-ai/fred-hutch-gatk
 ----------------------------------------------------------------------------------------
- cmd : nextflow run test.nf -entry desired-workflow1 
+ cmd : nextflow run test.nf -entry desired-workflow1 -C module.config
 
- cmdASK: nextflow run path/to/module.nf
+ cmdASK: nextflow run path/to/module.nf 
 
 */
+
+// 
+// ASK: Validate inputs, this might be handy, meaning
+//
+// params.fasta = params.genome ? params.genomes[ params.genome ].fasta ?: false : false
+// if (params.fasta) {
+//   Channel.fromPath(params.fasta)
+//         .ifEmpty { exit 1, "fasta annotation file not found: ${params.fasta}" }
+//         .into { fasta_scatter_intervals; fasta_bwa; fasta_baserecalibrator; fasta_haplotypecaller; fasta_genotypeVcfs; fasta_variantrecalibrator_snps; fasta_variantrecalibrator_tranches; fasta_variant_eval; fasta_structural_variantcaller }
+//   }
+// }
+// ************
 
 include { BWA; BWAMEM; BWAMEM_SAMTOOLS_SORT } from './modules/bwamem/bwa.nf'
 include { MARKDUPLICATES; BASERECALIBRATOR; APPLYBQSR } from './modules/bwamem/bwa.nf'
@@ -48,27 +60,27 @@ workflow bwa_sam_combined_test {
 
 }
 
-workflow bwa_gatk {
-    // # 1
-    MARKDUPLICATES(name) // from path (bam_sort) file
-    // # 2
-    Channel.fromPath(params.fasta)
-            .ifEmpty { exit 1, "fasta annotation file not found: ${params.fasta}" }
-            .set { fasta_baserecalibrator_ch}
-    // # 3
-    fasta_baserecalibrator_ch
-        .mix( fai_baserecalibrator, dict_baserecalibrator, dbsnp, dbsnp_idx, golden_indel, golden_indel_idx )
-        .set{ baserecalibrator_index_ch }
-    // # 4
-    bam_markdup_baserecalibrator_ch
-        .combine( baserecalibrator_index_ch )
-        .set{ baserecalibrator_ch }
-    // # 5
-    BASERECALIBRATOR( baserecalibrator_ch )
-    // # 6
-    baserecalibrator_table_ch
-        .join( bam_markdup_applybqsr_ch )
-        .set{ applybqsr_ch }
-    // # 6
-    APPLYBQSR( applybqsr_ch )
-}
+// workflow bwa_gatk {
+//     // # 1
+//     MARKDUPLICATES(name) // from path (bam_sort) file
+//     // # 2
+//     Channel.fromPath(params.fasta)
+//             .ifEmpty { exit 1, "fasta annotation file not found: ${params.fasta}" }
+//             .set { fasta_baserecalibrator_ch}
+//     // # 3
+//     fasta_baserecalibrator_ch
+//         .mix( fai_baserecalibrator, dict_baserecalibrator, dbsnp, dbsnp_idx, golden_indel, golden_indel_idx )
+//         .set{ baserecalibrator_index_ch }
+//     // # 4
+//     bam_markdup_baserecalibrator_ch
+//         .combine( baserecalibrator_index_ch )
+//         .set{ baserecalibrator_ch }
+//     // # 5
+//     BASERECALIBRATOR( baserecalibrator_ch )
+//     // # 6
+//     baserecalibrator_table_ch
+//         .join( bam_markdup_applybqsr_ch )
+//         .set{ applybqsr_ch }
+//     // # 6
+//     APPLYBQSR( applybqsr_ch )
+// }
