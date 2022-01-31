@@ -51,5 +51,3 @@ RUN ./configure --prefix=$SAMTOOLS_DST \
 ENV PATH="$SAMTOOLS_DST/bin:$PATH"
 
 WORKDIR / 
-
-CMD ["bwa","samtools"]
