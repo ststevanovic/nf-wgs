@@ -26,39 +26,39 @@ nextflow.enable.dsl=2
 // }
 // ************
 
-include { BWA; BWAMEM; BWAMEM_SAMTOOLS_SORT } from './modules/bwamem/bwa.nf'
+include { BWAINDEX; BWAMEM; BWAMEM_SAMTOOLS_SORT } from './modules/bwamem/bwa.nf'
 include { MARKDUPLICATES; BASERECALIBRATOR; APPLYBQSR } from './modules/bwamem/bwa.nf'
 
 
 // TODO/ASK: if path/to/module.nf nextflow config inside a module ...
-workflow bwa_only {
-    Channel
-        .fromPath(params.reference_genome)
-        .set { fasta_ch }
+// workflow bwa_only {
+//     Channel
+//         .fromPath(params.reference_genome)
+//         .set { fasta_ch }
 
-    Channel
-        .fromFilePairs(params.reads)
-        .set { reads_ch }
+//     Channel
+//         .fromFilePairs(params.reads)
+//         .set { reads_ch }
     
-    BWA ( fasta_ch )    
-    BWAMEM ( reads_ch, fasta_ch, BWA.out.bwa_index )
-}
+//     BWAINDEX ( fasta_ch )    
+//     BWAMEM ( reads_ch, fasta_ch, BWA.out.bwa_index )
+// }
 
-workflow bwa_sam_combined_test {
-    Channel
-        .fromPath(params.reference_genome)
-        .set { fasta_ch }
+// workflow bwa_sam_combined_test {
+//     Channel
+//         .fromPath(params.reference_genome)
+//         .set { fasta_ch }
 
-    fasta_ch.view()
+//     fasta_ch.view()
 
-    Channel
-        .fromFilePairs(params.reads)
-        .set { reads_ch }
+//     Channel
+//         .fromFilePairs(params.reads)
+//         .set { reads_ch }
     
-    BWA ( fasta_ch )    
-    BWAMEM_SAMTOOLS_SORT ( reads_ch, fasta_ch, BWA.out.bwa_index )
+//     BWAINDEX ( fasta_ch )    
+//     BWAMEM_SAMTOOLS_SORT ( reads_ch, fasta_ch, BWA.out.bwa_index )
 
-}
+// }
 
 // workflow bwa_gatk {
 //     // # 1
@@ -84,3 +84,25 @@ workflow bwa_sam_combined_test {
 //     // # 6
 //     APPLYBQSR( applybqsr_ch )
 // }
+
+workflow test_this {    
+    
+    
+    Channel
+        .fromPath(params.reference_genome)
+        .set { fasta_ch }
+
+    BWAINDEX ( fasta_ch )
+
+    Channel
+        .of ( BWAINDEX.out.bwa_index )
+        .branch{
+            branch_1: it
+            branch_2: it
+        }.set{ results_ch }
+
+    results_ch.branch_1.view()
+
+    results_ch.branch_2.view()
+
+}

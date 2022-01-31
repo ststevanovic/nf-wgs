@@ -12,7 +12,7 @@ process SAMTOOLS_FAI {
 
   output:
   //  genome_index_ch 
-  path "${genome}.fai", emit: genome_index_fai
+  path "${genome.baseName}.fai", emit: genome_index_fai
 
   script:
   """

@@ -1,8 +1,9 @@
 # Introduction
 
-Bwamem is a pipeline which combines BWA and GATK tools.
-It takes genome reference sequence and make index.
-Steps...
+Bwamem is a pipeline which combines BWA, Samtools and Genome Analysis Toolkit (GATK).
+BWA is a software package for mapping low-divergent sequences against a large reference genome, such as the human genome. It consists of three algorithms: BWA-backtrack, BWA-SW and BWA-MEM. In this pipeline, first step is BWA index takes genome reference as an input and make index files. The output is sorted using Samtools.
+It then takes these files for
+
 It deduplicates...
 
 ## Additional description:

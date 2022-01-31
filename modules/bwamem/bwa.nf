@@ -73,8 +73,6 @@ process MARKDUPLICATES {
 
   output:
   tuple val(name), file("${name}_MarkDup.bam"), emit: bam_markdup
-  // TODO: can't emit two var -- is this done by splitChannels ?
-  // bam_markdup_baserecalibrator, bam_markdup_applybqsr
   // TODO: fix for multiqc needed
   // tuple val("marked_dup_metrics") file("marked_dup_metrics.txt"), emit: markdup_multiqc
 
@@ -262,26 +260,43 @@ workflow gatk_workflow {
   dict_baserecalibrator = DICTIONARY( fasta_baserecalibrator_ch )   // reference
   // ------------------
   
-  // TODO: no space left on device...
-  gunzip_dbsnp.out
-  
-  // fasta_baserecalibrator_ch
-  //   .mix( 
-  //     fasta_baserecalibrator_ch,
-  //     fai_baserecalibrator_ch,
-  //     dict_baserecalibrator, 
-  //     util_dbsnp.out.dbsnp, 
-  //     util_dbsnp.out.dbsnp_idx, 
-  //     util_dbsnp_gi.out.golden_indel, 
-  //     util_dbsnp_gi.out.golden_indel_idx )
-  //   .set{ baserecalibrator_index_ch }
-  
-  // MARKDUPLICATES.out.bam_markdup // here !!! format: MARKDUPLICATES .. markduplicates // MARKDUPLICATES.out.out ? naming convention and docs ?
-  //   .combine( baserecalibrator_index_ch )
-  //   .set{ baserecalibrator_ch }
+  // input : 
+  // set val(name), 
+  // file(bam_markdup)
+  //  file(fasta)
+  //  file(fai)
+  //  file(dict)
+  //  file(dbsnp)
+  //  file(dbsnp_idx)
+  //  file(golden_indel)
+  //  file(golden_indel_idx) from baserecalibrator
 
+  // baserecalibrator_index = 
+  // fasta_baserecalibrator
+    // . merge(fai_baserecalibrator, dict_baserecalibrator, dbsnp, dbsnp_idx, golden_indel, golden_indel_idx)
+  // baserecalibrator = bam_markdup_baserecalibrator.combine(baserecalibrator_index)
+
+
+
+  fasta_baserecalibrator_ch
+  // merge depricated, use join; but join not working
+    .mix(
+      fai_baserecalibrator_ch,
+      dict_baserecalibrator, 
+      gunzip_dbsnp.out.dbsnp, 
+      gunzip_dbsnp.out.dbsnp_idx, 
+      gunzip_golden_indel.out.golden_indel, 
+      gunzip_golden_indel.out.golden_indel_idx )
+    .set{ baserecalibrator_index_ch }
+  
+  MARKDUPLICATES.out.bam_markdup // here !!! format: MARKDUPLICATES .. markduplicates // MARKDUPLICATES.out.out ? naming convention and docs ?
+    .combine( baserecalibrator_index_ch )
+    .set{ baserecalibrator_ch }
+
+  // baserecalibrator_ch.view{"Baserecalibrator prep: $it"}
+  //  this prints out many combined values ( tuples ) e.g. test_rna_sorted.aligned, .../test.ref.ercc.fa.fai
   // // // # 2-processes
-  // BASERECALIBRATOR( baserecalibrator_ch )
+  BASERECALIBRATOR( baserecalibrator_ch )
   
   // // // # 3
   // BASERECALIBRATOR.out.baserecalibrator_table
