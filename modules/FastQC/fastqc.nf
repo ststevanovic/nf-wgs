@@ -6,7 +6,7 @@ nextflow.enable.dsl=2
 //
 
 // TODO: use Fastqc result html insetead (?)
-include { MULTIQC } from '../multiqc/multiqc.nf'
+include { MULTIQC } from '../MultiQC/multiqc.nf'
 
 process FASTQC {
     tag "FASTQC on $sample_id, SingleEnd: $single_end"
@@ -26,12 +26,29 @@ process FASTQC {
     """
 }
 
+process FASTQC_VERSION {
+    tag "FASTQC version"
+    publishDir $params.outdir 
+
+    output:
+    path "fastqc_version.yml", emit: fastqc_version
+
+    script:
+    """
+    echo "---" > fasta_version.yaml && \    
+    fa=$(echo "  FastQC:") && \
+    ver=$(fastqc --version | grep -Po "v.*") &&\
+    echo $fa$ver >> fasta_version.yaml
+    """
+}
+
 workflow test_fastqc_single_end {
     input = [ 
                 [ id:'test', single_end:true ], // meta map
                 [ file(params.test_data['test_dna_ercc_1.fq.gz'], checkIfExists: true) ]
             ]
-
+    
+    FASTQC_VERSION
     FASTQC ( input )
 }
 
@@ -44,6 +61,7 @@ workflow {
                 ]
             ]
 
+    FASTQC_VERSION
     FASTQC ( input )
 
     MULTIQC ( FASTQC.out.collect() )

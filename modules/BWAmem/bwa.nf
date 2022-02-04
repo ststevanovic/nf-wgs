@@ -1,7 +1,7 @@
 nextflow.enable.dsl=2
 
 log.info """
-  nextflow -log logs/bwa.log run modules/bwamem/bwa.nf -entry gatk_workflow -c modules/bwamem/bwa.config
+  nextflow -log logs/bwa.log run modules/BWAmem/bwa.nf -entry gatk_workflow -c modules/BWAmem/bwa.config
 """
   // TODO: check dump, use emit
 
@@ -55,11 +55,12 @@ process BWAMEM_SAMTOOLS_SORT {
 
     output:
     tuple val(name), file("${name}_sorted.aligned.bam"), emit: bam
-
+    
     script:
-
+    cn = params.sequencing_center ? "CN:${params.sequencing_center}\\t" : ""
+    readGroup = "@RG\\tID:${name}\\t${cn}PU:${name}\\tSM:${name}\\tLB:${name}\\tPL:illumina"
     """
-    bwa mem -p -v 3 -t 16 -M ${fasta.baseName} ${reads} | samtools sort -o ${name}_sorted.aligned.bam
+    bwa mem -p -v 3 -t 16 -M ${fasta.baseName} ${reads}  -R \"${readGroup}\" | samtools sort -o ${name}_sorted.aligned.bam
     """
 }
 
@@ -86,17 +87,24 @@ process BASERECALIBRATOR {
   tag "$bam_markdup"
 
   input:
-  tuple val(name), file(bam_markdup), file(fasta), file(fai), file(dict), file(dbsnp), file(dbsnp_idx), file(golden_indel), file(golden_indel_idx) 
+  tuple val(name), file(bam_markdup)
+  file(fasta) 
+  file(index) 
+  file(dbsnp)
+  file(dbsnp_idx)
+
+  // file(golden_indel)
 
   output:
   tuple val(name), file("${name}_recal_data.table"), emit: baserecalibrator_table
   path "*data.table", emit: baseRecalibratorReport // -> multiqc
 
+  // --known-sites $golden_indel \
+
   """
   gatk BaseRecalibrator \
   -I $bam_markdup \
   --known-sites $dbsnp \
-  --known-sites $golden_indel \
   -O ${name}_recal_data.table \
   -R $fasta
   """
@@ -106,14 +114,16 @@ process APPLYBQSR {
     tag "$baserecalibrator_table"
 
     input:
-    tuple val(name), file(baserecalibrator_table), file(bam_markdup) 
+    tuple val(name), file(baserecalibrator_table), file(bam_markdup)
+    file(fasta)
+    file(index)
 
     output:
     tuple val(name), file("${name}_bqsr.bam"), emit: bam_bqsr_ch // will be needed for Haplotyper, (IndexBam?)
 
     script:
     """
-    gatk ApplyBQSR -I $bam_markdup -bqsr $baserecalibrator_table -O ${name}_bqsr.bam
+    gatk ApplyBQSR -I $bam_markdup -R $fasta -bqsr $baserecalibrator_table -O ${name}_bqsr.bam
     """
 }
 
@@ -173,7 +183,7 @@ process APPLYBQSR {
    }
   }
 
-  process DICTIONARY {
+  process dictionary {
     input:
     file genome  // .fasta
 
@@ -188,19 +198,6 @@ process APPLYBQSR {
   }
  
 workflow gatk_workflow {
-  // if (params.bwasam) {
-  // Channel
-  //     .fromPath(params.bwasam)
-  //     .map { file -> tuple(file.baseName, file) }
-  //     .ifEmpty { exit 1, "Cannot find any reads matching: ${params.bwasam}\nNB: Path needs to be enclosed in quotes!\nIf this is single-end data, please specify --singleEnd on the command line." }
-  //     // .set { reads_fastqc; reads_files }
-  //     .set { reads_fastqc }
-      
-  //     // .dump(tag:'input')
-  // }  
-  // reads_fastqc.view()
-
-  
   // TODO: TEMP:, from emit
   
   if (params.bwasam) {
@@ -208,11 +205,9 @@ workflow gatk_workflow {
     .fromPath( params.bwasam )
     .map { file -> tuple(file.baseName, file) }
     .ifEmpty { exit 1, "Cannot find any bams matching: ${params.bwasam}\nNB: Path needs to be enclosed in quotes!\nIf this is single-end data, please specify --singleEnd on the command line." }
-    .view{ "BAMfile: $it" }
+    // .view{ "BAMfile: $it" }
     .set{ bam_sort_ch }
   }  
-
-  // // //
   
   // # 2 - channels
   if (params.genome) {
@@ -245,63 +240,67 @@ workflow gatk_workflow {
             .ifEmpty { exit 1, "golden_indel_idx_gz annotation file not found: ${params.golden_indel_idx_gz}" }
             .set { golden_indel_idx_gz_ch }
   }
+  Channel
+    .fromFilePairs( params.reads, checkIfExists: true )
+    .set{ ch_reads }
 
   Channel
     .fromPath( params.fastaFai )
-    .view { "Fasta FAI : $it" }
     .set{ fai_baserecalibrator_ch }
 
+  Channel
+    .fromPath( params.genomes_base )
+    .set{ ch_fasta }
 
-  MARKDUPLICATES( bam_sort_ch ) // emits bam_markdup
+  BWAINDEX ( ch_fasta )
+  BWAMEM_SAMTOOLS_SORT ( ch_reads, ch_fasta, BWAINDEX.out.bwa_index )
   
-  // ------ utils -----
-  gunzip_dbsnp( dbsnp_gz_ch, dbsnp_idx_gz_ch )                      // snips
-  gunzip_golden_indel( golden_indel_gz_ch, golden_indel_idx_gz_ch)  // indels
-  dict_baserecalibrator = DICTIONARY( fasta_baserecalibrator_ch )   // reference
-  // ------------------
+  MARKDUPLICATES( BWAMEM_SAMTOOLS_SORT.out.bam ) // emits bam_markdup
+  ch_bam_dedup = MARKDUPLICATES.out.bam_markdup
+  ch_bam_dedup.view()
+
+  dict_baserecalibrator = dictionary( fasta_baserecalibrator_ch )   // reference
+
+  Channel                                                   
+          // .fromList( params.dbsnp_gz.split(',').toList() )
+          .fromPath( params.dbsnp_gz )
+          // .map { it -> tuple(file("$it"), file("${it}.tbi")) }
+          .set { ch_dbsnp }
+  Channel 
+          .fromPath( params.dbsnp_idx_gz )
+          .set{ ch_dbsnp_idx }
+  // Channel                                                   
+  //         .fromList( params.golden_indel_gz.baseName )
+  //         // todo: rename
+  //         // .map { it -> [it[0].replace('_bwa_sorted_dedup','').replace('_bwa_sorted','').replace('_bwt2',''), it[1]]}
+  //         .map { it -> tuple(file("$it"), file("${it}.idx.gz")) }
+  //         .set { ch_indel }
+  Channel 
+          .fromPath( params.fastaFai )
+          .mix( dict_baserecalibrator )
+          .set { ch_index }
+
+  BASERECALIBRATOR( 
+    ch_bam_dedup,
+    fasta_baserecalibrator_ch.collect(),
+    ch_index.collect(),
+    ch_dbsnp.collect(),
+    ch_dbsnp_idx.collect(),
+    // ch_indel.collect()
+  )
   
-  // input : 
-  // set val(name), 
-  // file(bam_markdup)
-  //  file(fasta)
-  //  file(fai)
-  //  file(dict)
-  //  file(dbsnp)
-  //  file(dbsnp_idx)
-  //  file(golden_indel)
-  //  file(golden_indel_idx) from baserecalibrator
+  BASERECALIBRATOR.out.baserecalibrator_table
+    .join( ch_bam_dedup )
+    .set{ ch_table_bam }
+  ch_table_bam.view()
 
-  // baserecalibrator_index = 
-  // fasta_baserecalibrator
-    // . merge(fai_baserecalibrator, dict_baserecalibrator, dbsnp, dbsnp_idx, golden_indel, golden_indel_idx)
-  // baserecalibrator = bam_markdup_baserecalibrator.combine(baserecalibrator_index)
+  Channel
+    .of( BASERECALIBRATOR.out.baserecalibrator_table )
+    .view()
 
-
-
-  fasta_baserecalibrator_ch
-  // merge depricated, use join; but join not working
-    .mix(
-      fai_baserecalibrator_ch,
-      dict_baserecalibrator, 
-      gunzip_dbsnp.out.dbsnp, 
-      gunzip_dbsnp.out.dbsnp_idx, 
-      gunzip_golden_indel.out.golden_indel, 
-      gunzip_golden_indel.out.golden_indel_idx )
-    .set{ baserecalibrator_index_ch }
-  
-  MARKDUPLICATES.out.bam_markdup // here !!! format: MARKDUPLICATES .. markduplicates // MARKDUPLICATES.out.out ? naming convention and docs ?
-    .combine( baserecalibrator_index_ch )
-    .set{ baserecalibrator_ch }
-
-  // baserecalibrator_ch.view{"Baserecalibrator prep: $it"}
-  //  this prints out many combined values ( tuples ) e.g. test_rna_sorted.aligned, .../test.ref.ercc.fa.fai
-  // // // # 2-processes
-  BASERECALIBRATOR( baserecalibrator_ch )
-  
-  // // // # 3
-  // BASERECALIBRATOR.out.baserecalibrator_table
-  //   .join( MARKDUPLICATES.out.bam_markdup )
-  //   .set{ applybqsr_ch }
-  
-  // APPLYBQSR( applybqsr_ch )
+  APPLYBQSR( 
+    ch_table_bam,
+    ch_fasta.collect(), 
+    ch_index.collect() 
+    )
 }

@@ -10,14 +10,14 @@ log.info """\
          """
          .stripIndent()
 
-include { FASTQC } from './modules/fastqc/fastqc.nf'
-include { BWAINDEX; BWAMEM_SAMTOOLS_SORT } from './modules/bwamem/bwa.nf'
-// include { MARKDUPLICATES } from './modules/bwamem/bwa.nf'
-// include { BASERECALIBRATOR } from './modules/bwamem/bwa.nf'
-// include { SAMTOOLS_REPORT } from 'modules/samtools/samtools.nf'
-// include { QUALIMAP } from 'modules/qualimap/qualimap.nf'
-// include { HAPOLOTYPER } from 'modules/haplotyper/haplotyper.nf'
-include { MULTIQC } from './modules/multiqc/multiqc.nf'
+include { FASTQC } from './modules/FastQC/fastqc.nf'
+include { BWAINDEX; BWAMEM_SAMTOOLS_SORT } from './modules/BWAmem/bwa.nf'
+// include { MARKDUPLICATES } from './modules/BWAmem/bwa.nf'
+// include { BASERECALIBRATOR } from './modules/BWAmem/bwa.nf'
+// include { SAMTOOLS_REPORT } from 'modules/Samtools/samtools.nf'
+// include { QUALIMAP } from 'modules/Qualimap/qualimap.nf'
+// include { HAPOLOTYPER } from 'modules/Haplotyper/haplotyper.nf'
+include { MULTIQC } from './modules/MultiQC/MultiQC.nf'
 
 // unnamed 
 workflow { 
@@ -48,22 +48,11 @@ workflow {
     // TODO: ...
 
     MULTIQC( FASTQC.out.fastqc.collect().ifEmpty([]) )
+    //     MULTIQC(
+    //     QUANT.out.mix(FASTQC.out).collect(),
+    //     file(params.multiqc) )
+
 }
-
-// TODO: named 
-// workflow EXAMPLE {
-//   take:
-//     transcriptome
-//     read_pairs_ch
-
-//   main:
-//     INDEX( transcriptome )
-//     QUANT( INDEX.out, read_pairs_ch )
-//     FASTQC( read_pairs_ch )
-//     MULTIQC(
-//             QUANT.out.mix(FASTQC.out).collect(),
-//             file(params.multiqc) )
-// }
 
 workflow.onComplete {
     log.info ( workflow.success ? "\nDone! Open the following report in your browser --> $params.outdir/multiqc_report.html\n" : null)

@@ -26,12 +26,6 @@ nextflow run modules/fastqc/fastqc.nf --help
 ```
 
 ```
-N E X T F L O W  ~  version 0.25.5
-Launching `main.nf` [silly_baekeland] - revision: 82d1c9f7ca
-====================================================================
-GATK4 Best Practice Nextflow Pipeline (v0.1)
-====================================================================
-
 USAGE:
 
 nextflow \
@@ -39,9 +33,10 @@ nextflow \
 run modules/fastqc/fastqc.nf -c modules/fastqc/fastqc.config \
 --test_data read_r1.fq.gz
 
-Optional arguments:
-    --test_data     FILE(s)            Fastq(.gz) file(s) for read1 [, read2]
-    --outdir        DIR                Output directory(default: ./moduleTest)
+Arguments:
+    --test_data     FILE(s)            Fastq(.gz) file(s) for read1 [, read2] (default: data/reads/*_dna_ercc_{1,2}.fq.gz)
+    --outdir        DIR                Output directory(default: results/TEST/FastQC/)
+
 
 ====================================================================
 ```
