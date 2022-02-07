@@ -1,4 +1,4 @@
-FROM ubuntu:20.04.3 
+FROM ubuntu:20.04
 
 ENV \
     DST=/opt/samtools \
@@ -24,5 +24,4 @@ RUN cd samtools-$VER \
     && make \
     && make install 
 ENV PATH="$DST/bin:$PATH"
-# RUN export PATH="$DST/bin:${PATH}"
 # RUN cd /root && rm -r samtools-$VER 

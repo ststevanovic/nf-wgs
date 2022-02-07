@@ -1,59 +1,70 @@
-/*
- * Process : Create a FASTA genome index with samtools
- * nextflow -log logs/samtools.log run modules/samtools/samtools.nf -entry samtools_fai -c modules/samtools/samtools.config
- */
 nextflow.enable.dsl=2
 
+log.info "===================================================================="
+log.info " Indexing Fasta fasta file, sorting BAM file                        "
+log.info " nextflow -log logs/samtools.log  \\                                "
+log.info " run modules/Samtools/samtools.nf \\                                "
+log.info " -entry samtools_fai -c modules/Samtools/samtools.config            "
+log.info "===================================================================="
+
+
 process SAMTOOLS_FAI { 
-  tag { "samtools FAI on ${genome.baseName}" }
+  tag { "samtools FAI on ${fasta.baseName}" }
 
   input:
-  file genome
+  file fasta
 
   output:
-  //  genome_index_ch 
-  path "${genome.baseName}.fai", emit: genome_index_fai
+  path "${fasta.baseName}.fai", emit: fasta_index_fai
 
   script:
   """
-  samtools faidx ${genome}
+  samtools faidx ${fasta} -o ${fasta.baseName}.fai
   """
 }
 
 process SAMTOOLS_SORT_BAM {
   input:
+  file sam
   
   output:
+  path "${sam}_sorted.bam", emit: sorted_bam
 
   script:
   """
-  samtools sort ${input}.sam -o ${input}_sorted.bam
+  samtools sort ${sam}.sam
   """
 }
 
 process SAMTOOLS_REPORT { 
   input:
-  path genome
+  path bam
 
   output:
-  // into genome_index_ch 
-  path "${genome}.fai" 
+  path "${bam.baseName}_reports.txt" 
 
   script:
   """
-  samtools faidx ${genome} 
+  samtools stats ${bam} > "${bam.baseName}_reports.txt"
   """
 }
 
-workflow samtools_fa_index {
-  
-  if (params.genome)  {
+workflow samtools_fa_index_report {
+
+  if (params.fasta)  {
     Channel
-      .fromPath( params.genome )
-      .view( "Fasta genome : -> ${it}" )
-      .set{ fasta_ch }
+          .fromPath( params.fasta )
+          .view { "Fasta : $it" }
+          .set{ ch_fasta }
   }
 
-  SAMTOOLS_FAI( fasta_ch )
+  Channel
+    .fromPath( params.bam )
+    .view{ "Bam file : $it" }
+    .set{ ch_bam }
+
+  SAMTOOLS_FAI( ch_fasta )
+
+  SAMTOOLS_REPORT( ch_bam )
 
 }
