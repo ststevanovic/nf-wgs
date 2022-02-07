@@ -17,7 +17,6 @@ BWASAM_CONTAINER_DIR="multiqc"
 MULTIQC_IMAGE_NAME="multiqc:latest"
 MULTIQC_CONTAINER_DIR="multiqc"
 
-
 cd $FASTQC_CONTAINER_DIR
 docker build -t $FASTQC_IMAGE_NAME .
 cd ..
