@@ -45,6 +45,7 @@ process QUALIMAP {
     shell:
     mem_qm  = params.mem -2 //params.mem.intdiv(2)
     '''
+
     qualimap bamqc -nt !{params.cpu} --skip-duplicated -bam !{bam} --java-mem-size=!{mem_qm}G -outdir !{bam_tag} -outformat !{params.output_format}
     '''
 }
