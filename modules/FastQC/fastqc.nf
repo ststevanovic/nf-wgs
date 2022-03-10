@@ -1,11 +1,4 @@
 nextflow.enable.dsl=2
-
-//
-// TODO: fastqc_version.yml
-// TODO: use metamap
-//
-
-// TODO: use Fastqc result html insetead (?)
 include { MULTIQC } from '../MultiQC/multiqc.nf'
 
 process FASTQC {
@@ -35,16 +28,20 @@ process FASTQC_VERSION {
 
     script:
     """
-    echo "---" > fasta_version.yaml && \    
-    fa=$(echo "  FastQC:") && \
-    ver=$(fastqc --version | grep -Po "v.*") &&\
-    echo $fa$ver >> fasta_version.yaml
+    echo '---' > fasta_version.yml && \
+    fa='  FastQC:' && \
+    ver=`fastqc --version | grep -Po 'v.*'` && \
+    echo $fa$ver >> fasta_version.yml
     """
 }
 
+//
+// TODO: whats metamap
+//
 workflow test_fastqc_single_end {
+    // meta map
     input = [ 
-                [ id:'test', single_end:true ], // meta map
+                [ id:'test', single_end:true ], 
                 [ file(params.test_data['test_dna_ercc_1.fq.gz'], checkIfExists: true) ]
             ]
     
@@ -53,16 +50,13 @@ workflow test_fastqc_single_end {
 }
 
 workflow {
-    input = [ 
-                [id: 'test', single_end: false], // meta map
-                [ 
-                    file(params.test_data['test_dna_ercc_1.fq.gz'], checkIfExists: true),
-                    file(params.test_data['test_dna_ercc_2.fq.gz'], checkIfExists: true) 
-                ]
-            ]
+
+    Channel
+        .fromFilePairs( params.test_data, checkIfExists:true )
+        .set{ ch_reads }
 
     FASTQC_VERSION
-    FASTQC ( input )
+    FASTQC ( ch_reads )
 
     MULTIQC ( FASTQC.out.collect() )
 }
