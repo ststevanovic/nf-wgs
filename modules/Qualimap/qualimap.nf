@@ -8,7 +8,7 @@ if (params.help) {
     log.info ""
     log.info "--------------------  QC  ------------------------------"
     log.info ""
-    log.info "nextflow -log logs/qualimap.log run modules/Qualimap/qualimap.nf -c modules/Qualimap/qualimap.config -entry qualimap_workflow"
+    log.info "nextflow -log logs/qualimap.log run modules/Qualimap/qualimap.nf -c modules/Qualimap/qualimap.config"
     log.info ""
     log.info "Mandatory arguments:"
     log.info "--inpdir               FOLDER               Folder containing bam files"
@@ -50,13 +50,13 @@ process QUALIMAP {
     '''
 }
 
-workflow qualimap_workflow {
+workflow {
 
   Channel.fromPath( params.inpdir+'/*.bam' )
        .ifEmpty { error "Cannot find any bam file in: ${params.inpdir}" }
        .map{ file -> tuple(file.baseName, file) } 
        .groupTuple(by: 0)
-       .view{"$it"}
+      //  .view{"$it"}
        .set{ bam_init }
 
   QUALIMAP( bam_init )

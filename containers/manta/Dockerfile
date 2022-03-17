@@ -1,49 +1,10 @@
-FROM ubuntu:16.04 as builder
+FROM ubuntu:20.04
+RUN apt-get -y update
+RUN apt-get install -y wget \
+        python
 
-USER root
+RUN mkdir manta
+RUN wget --no-check-certificate https://github.com/Illumina/manta/releases/download/v1.6.0/manta-1.6.0.centos6_x86_64.tar.bz2
+RUN tar xvjf manta-1.6.0.centos6_x86_64.tar.bz2 -C manta --strip-components=1
 
-ENV VER_MANTA="1.6.0"
-
-RUN apt-get -yq update
-# no benefit of combined in builder stage
-RUN apt-get install -yq --no-install-recommends locales
-RUN apt-get install -yq --no-install-recommends ca-certificates
-RUN apt-get install -yq --no-install-recommends gcc
-RUN apt-get install -yq --no-install-recommends g++
-RUN apt-get install -yq --no-install-recommends python
-RUN apt-get install -yq --no-install-recommends bzip2
-RUN apt-get install -yq --no-install-recommends make
-RUN apt-get install -yq --no-install-recommends zlib1g-dev
-RUN apt-get install -yq --no-install-recommends cmake
-RUN apt-get install -yq --no-install-recommends libboost-dev
-RUN apt-get install -yq --no-install-recommends curl
-
-# download and install manta
-WORKDIR /tmp
-RUN curl -sSL --retry 10 https://github.com/Illumina/manta/releases/download/v${VER_MANTA}/manta-${VER_MANTA}.release_src.tar.bz2 > manta.tar.bz2
-RUN mkdir -p manta
-RUN tar --strip-components 1 -C manta -jxf manta.tar.bz2
-WORKDIR /tmp/manta/build
-RUN ../configure --jobs=4 --prefix=$OPT/manta
-RUN make -j4 install
-
-RUN apt-get -yq update 
-RUN apt-get remove -yq unattended-upgrades
-RUN apt-get autoremove -yq
-
-RUN locale-gen en_US.UTF-8
-RUN update-locale LANG=en_US.UTF-8
-
-ENV OPT /opt/wtsi-cgp
-ENV PATH $OPT/manta/bin:$PATH
-ENV PERL5LIB $OPT/lib/perl5
-ENV LD_LIBRARY_PATH $OPT/lib
-ENV LC_ALL en_US.UTF-8
-ENV LANG en_US.UTF-8
-
-RUN adduser --disabled-password --gecos '' manta && chsh -s /bin/bash && mkdir -p /home/manta
-
-USER    manta
-WORKDIR /home/manta
-
-CMD ["/bin/bash"]
+ENV PATH=/manta/bin:$PATH

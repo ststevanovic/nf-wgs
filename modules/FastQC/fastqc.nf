@@ -1,11 +1,14 @@
 nextflow.enable.dsl=2
 include { MULTIQC } from '../MultiQC/multiqc.nf'
 
+log.info"""
+nextflow -log logs/fq.log run modules/FastQC/fastqc.nf -c modules/FastQC/fastqc.config
+"""
+
 process FASTQC {
     tag "FASTQC on $sample_id, SingleEnd: $single_end"
 
     input:
-    // tuple val(id), val(single_end)
     tuple val(sample_id), path(reads)
     
 
@@ -36,13 +39,13 @@ process FASTQC_VERSION {
 }
 
 //
-// TODO: whats metamap
+// TODO: use ofx metamap
 //
 workflow test_fastqc_single_end {
     // meta map
     input = [ 
                 [ id:'test', single_end:true ], 
-                [ file(params.test_data['test_dna_ercc_1.fq.gz'], checkIfExists: true) ]
+                [ file(params.reads['test_dna_ercc_1.fq.gz'], checkIfExists: true) ]
             ]
     
     FASTQC_VERSION
@@ -52,7 +55,7 @@ workflow test_fastqc_single_end {
 workflow {
 
     Channel
-        .fromFilePairs( params.test_data, checkIfExists:true )
+        .fromFilePairs( params.reads, checkIfExists:true )
         .set{ ch_reads }
 
     FASTQC_VERSION
