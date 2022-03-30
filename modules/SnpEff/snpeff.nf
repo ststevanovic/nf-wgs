@@ -19,7 +19,6 @@ process SNPEFF {
     tuple val(sample_id_reduced), file("${sample_id_reduced}.snpEff.ann.vcf"), emit: snpeff_vcf
     
     // Note: anything from Haplotyper ?
-    // TODO: need cache ? 
     script:
     sample_id_reduced = sample_id.minus("_bqsr")
     cache = (params.snpeff_cache) ? "-dataDir \${PWD}/${data_dir}" : ""
@@ -59,10 +58,7 @@ workflow {
         .map{file -> tuple(file.baseName, file)}
         .set{ ch_vcf }
 
-    // Channel 
-    //     .fromFilePairs(params.vcf)
-    //     .map{ it -> [it[0], [it[1]]].flatten() }
-    //     .set{ ch_vcf }
+ 
     
     SNPEFF(
         ch_vcf,
