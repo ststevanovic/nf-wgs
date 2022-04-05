@@ -2,13 +2,6 @@ nextflow.enable.dsl=2
 log.info """
 nextflow -log logs/tmbler.log run modules/TMBler/tmbler.nf -c modules/TMBler/tmbler.config
 """
-// log.info """
-// Local run:
-
-// docker run     --name tmbler     --rm     -e USER=\$(whoami)     -e PASSWORD=helloworld     -e USERID=\$UID     -p 8787:8787   
-//   -v \$(pwd)/workdir     aguida/tmbler:latest
-// """
-
 
 // Note 2 combine collect <-
 // Note 3 fastq propagira <-
@@ -62,79 +55,24 @@ process TMBler {
                             )
         
 
-    vcfs_NoCancer <- applyFilters(  
+    vcfs_NoCancer_NoSynonymous <- applyFilters(  
                             vcfs = vcfs,
                             assembly = genome_assembly,
                             design = design,
-                            remove.cancer = T
-                            )
-    
-    vcfs_NoSynonymous <- applyFilters(
-                            vcfs = vcfs, 
-                            assembly = genome_assembly, 
-                            design = design, 
+                            remove.cancer = T,
                             variantType = c("synonymous")
                             )
     
-    vcfs_NoCancer_NoSynonymous <- applyFilters(
-                            vcfs = vcfs, 
-                            assembly = genome_assembly,
-                            design = design, 
-                            remove.cancer = T, 
-                            variantType = c("synonymous")
-                            )
-    
-    vcfs_NoSynonymous_VAFFilter <- applyFilters(
-                            vcfs = vcfs, 
-                            assembly = genome_assembly, 
-                            design = design, 
-                            vaf.cutoff = 0.05, 
-                            variantType = c("synonymous")
-                            )
-
-    vcfs_VAFFilter <- applyFilters(
-                            vcfs = vcfs, 
-                            assembly = genome_assembly, 
-                            design = design, 
-                            vaf.cutoff = 0.05,
-                            tsList = NULL, 
-                            remove.cancer = T
-                            )
-    
-    vcfs_NoCancer_VAFFilter <- applyFilters(
-                            vcfs = vcfs, 
-                            assembly = genome_assembly, 
-                            design = design, 
-                            vaf.cutoff = 0.05, 
-                            remove.cancer = T
-                            )
- 
-    vcfs_NoCancer_VAFFilter_NoSynonymous <- applyFilters(
-                            vcfs = vcfs, 
-                            assembly = genome_assembly, 
-                            design = design, 
-                            vaf.cutoff = 0.05, 
-                            remove.cancer = T, 
-                            variantType = c("synonymous")
-                            )
-
-
     vcfs_nonfiltered <- applyFilters(
-                            vcfs = vcfs,
-                            assembly = genome_assembly, 
-                            design = design
-                            ) 
+                        vcfs = vcfs,
+                        assembly = genome_assembly, 
+                        design = design
+                        ) 
 
 
     vcfs_all <- c(
-                vcfs_NoCancer, 
-                vcfs_NoCancer_NoSynonymous, 
-                vcfs_NoSynonymous, 
-                vcfs_NoSynonymous_VAFFilter, 
-                vcfs_VAFFilter, 
-                vcfs_NoCancer_VAFFilter, 
-                vcfs_NoCancer_VAFFilter_NoSynonymous, 
-                vcfs_nonfiltered 
+                vcfs_NoCancer_NoSynonymous,
+                vcfs_nonfiltered
                 )
 
     TMB_res <- applyTMB(
@@ -144,8 +82,11 @@ process TMBler {
            
     DT::datatable(TMB_res)
     write.table(TMB_res, file='TMB_res.tsv', quote=FALSE, sep='\t')  
+    
     """
 }
+
+
 
 process test_inputs {
   label "tmbler_module"

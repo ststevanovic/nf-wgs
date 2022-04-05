@@ -1,18 +1,23 @@
-#!/usr/bin/env Rscript
+ #!/usr/bin/env Rscript
 
 library("devtools")
 library("TMBleR")
 
-genome_assembly <- "${genome}"
+args <- commandArgs(trailingOnly=TRUE)
 
-v_keys = sapply(${vcfs}, "[[", 1)
-v_values = sapply(${vcfs}, "[[", 2)
+vcfs <- eval(parse(text=(args[1])))
+genome_assembly <- as.character(args[2])
+design_file <- as.character(args[3])
+
+
+v_keys = sapply(vcfs, "[[", 1)
+v_values = sapply(vcfs, "[[", 2)
 vcf_files <- setNames(as.list(v_values), v_keys)
 
 vcfs <- readVcfFiles(vcfFiles = vcf_files, assembly = genome_assembly)
 
 design_file_path = system.file( "extdata"
-                        , "ExamplePanel_GeneIDs.txt"
+                        , design_file
                         , package = "TMBleR"
                         , mustWork = TRUE)
 
@@ -23,79 +28,24 @@ design <- readDesign(
                         )
     
 
-vcfs_NoCancer <- applyFilters(  
+vcfs_NoCancer_NoSynonymous <- applyFilters(  
                         vcfs = vcfs,
                         assembly = genome_assembly,
                         design = design,
-                        remove.cancer = T
-                        )
-
-vcfs_NoSynonymous <- applyFilters(
-                        vcfs = vcfs, 
-                        assembly = genome_assembly, 
-                        design = design, 
+                        remove.cancer = T,
                         variantType = c("synonymous")
                         )
-
-vcfs_NoCancer_NoSynonymous <- applyFilters(
-                        vcfs = vcfs, 
-                        assembly = genome_assembly,
-                        design = design, 
-                        remove.cancer = T, 
-                        variantType = c("synonymous")
-                        )
-
-vcfs_NoSynonymous_VAFFilter <- applyFilters(
-                        vcfs = vcfs, 
-                        assembly = genome_assembly, 
-                        design = design, 
-                        vaf.cutoff = 0.05, 
-                        variantType = c("synonymous")
-                        )
-
-vcfs_VAFFilter <- applyFilters(
-                        vcfs = vcfs, 
-                        assembly = genome_assembly, 
-                        design = design, 
-                        vaf.cutoff = 0.05,
-                        tsList = NULL, 
-                        remove.cancer = T
-                        )
-
-vcfs_NoCancer_VAFFilter <- applyFilters(
-                        vcfs = vcfs, 
-                        assembly = genome_assembly, 
-                        design = design, 
-                        vaf.cutoff = 0.05, 
-                        remove.cancer = T
-                        )
-
-vcfs_NoCancer_VAFFilter_NoSynonymous <- applyFilters(
-                        vcfs = vcfs, 
-                        assembly = genome_assembly, 
-                        design = design, 
-                        vaf.cutoff = 0.05, 
-                        remove.cancer = T, 
-                        variantType = c("synonymous")
-                        )
-
 
 vcfs_nonfiltered <- applyFilters(
-                        vcfs = vcfs,
-                        assembly = genome_assembly, 
-                        design = design
-                        ) 
+                    vcfs = vcfs,
+                    assembly = genome_assembly, 
+                    design = design
+                    ) 
 
 
 vcfs_all <- c(
-            vcfs_NoCancer, 
-            vcfs_NoCancer_NoSynonymous, 
-            vcfs_NoSynonymous, 
-            vcfs_NoSynonymous_VAFFilter, 
-            vcfs_VAFFilter, 
-            vcfs_NoCancer_VAFFilter, 
-            vcfs_NoCancer_VAFFilter_NoSynonymous, 
-            vcfs_nonfiltered 
+            vcfs_NoCancer_NoSynonymous,
+            vcfs_nonfiltered
             )
 
 TMB_res <- applyTMB(
@@ -103,5 +53,4 @@ TMB_res <- applyTMB(
             assembly = genome_assembly
             )
         
-DT::datatable(TMB_res)
-write.table(TMB_res, file='TMB_res.tsv', quote=FALSE, sep='\t')  
+write.table(TMB_res, file='TMBquant.tsv', quote=FALSE, sep='\t')  
