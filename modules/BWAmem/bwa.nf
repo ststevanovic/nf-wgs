@@ -6,21 +6,21 @@ log.info """
 
 process BWAINDEX {
   // TODO: ASK: output dir modular selection (env.config)
-  tag { genome.baseName }
+  tag { fasta.baseName }
 
   input:
-  file genome
+  file fasta
 
   output:
-  path "${genome.baseName}.{amb,ann,bwt,pac,sa}", emit: bwa_index
+  path "${fasta.baseName}.{amb,ann,bwt,pac,sa}", emit: bwa_index
 
 //   [ ! -d "bwa_index" ] && mkdir bwa_index ]
   """
   bwa \\
       index \\
       -a bwtsw \\
-      -p ${genome.baseName} \\
-      ${genome} 
+      -p ${fasta.baseName} \\
+      ${fasta} 
   """
 }
 
@@ -67,6 +67,7 @@ process BWAMEM_SAMTOOLS_SORT {
 // gatk tools
 process MARKDUPLICATES {
   tag "$bam_sort" 
+  label "bwamem_run_settings"
 
   input:
   tuple val(name), file(bam_sort) 
@@ -82,6 +83,7 @@ process MARKDUPLICATES {
 
 process BASERECALIBRATOR {
   tag "$bam_markdup"
+  label "bwamem_run_settings"
 
   input:
   tuple val(name), file(bam_markdup)
@@ -93,20 +95,21 @@ process BASERECALIBRATOR {
   // file(golden_indel)
 
   output:
-  tuple val(name), file("${name}_recal_data.table"), emit: baserecalibrator_table
+  tuple val(name), file("${name}.recal_data.table"), emit: baserecalibrator_table
   path "*data.table", emit: baseRecalibratorReport // -> multiqc
 
   """
   gatk BaseRecalibrator \
   -I $bam_markdup \
   --known-sites $dbsnp \
-  -O ${name}_recal_data.table \
+  -O ${name}.recal_data.table \
   -R $fasta
   """
 }
 
 process APPLYBQSR {
     tag "$baserecalibrator_table"
+    label "bwamem_run_settings"
 
     input:
     tuple val(name), file(baserecalibrator_table), file(bam_markdup)
@@ -182,15 +185,15 @@ process APPLYBQSR {
 
   process dictionary {
     input:
-    file genome  // .fasta
+    file fasta  // .fasta
 
     output:
-    path "${genome.baseName}.dict", emit: dict
+    path "${fasta.baseName}.dict", emit: dict
 
      """
     gatk CreateSequenceDictionary \
-    R=${genome} \
-    O=${genome.baseName}.dict
+    R=${fasta} \
+    O=${fasta.baseName}.dict
     """
   }
  
@@ -213,14 +216,14 @@ workflow {
     .set{ ch_reads }
 
   Channel
-    .fromPath( params.genomes_base )
-    .ifEmpty { exit 1, "fasta file not found: ${params.genome}" }
+    .fromPath( params.fasta )
+    .ifEmpty { exit 1, "fasta file not found: ${params.fasta}" }
     .set{ ch_fasta }
 
   dict_baserecalibrator = dictionary( ch_fasta )   
 
   Channel 
-          .fromPath( params.fastaFai )
+          .fromPath( params.fai )
           .mix( dict_baserecalibrator )
           .set { ch_index }
     
@@ -242,9 +245,6 @@ workflow {
   BASERECALIBRATOR.out.baserecalibrator_table
     .join( ch_bam_dedup )
     .set{ ch_table_bam }
-
-  Channel
-    .of( BASERECALIBRATOR.out.baserecalibrator_table )
 
   APPLYBQSR( 
     ch_table_bam,

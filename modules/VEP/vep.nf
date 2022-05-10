@@ -2,9 +2,10 @@ nextflow.enable.dsl=2
 log.info"""
 nextflow -log logs/vep.log run modules/VEP/vep.nf -c modules/VEP/vep.config
 """
-process GetSoftwareVersion {
-    label "vep_module"
-    publishDir "${params.outdir}/version", mode: params.publish_dir_mode
+process VEP_VERSION {
+    publishDir params.outdir, mode: params.publish_dir_mode, saveAs: {
+        "vep_version/${it}"
+    }
 
     output:
     file "vep_version.yaml"
@@ -17,8 +18,6 @@ process GetSoftwareVersion {
 }
 
 process VEP {
-    label "vep_module"
-
     tag "${sample_id}"
 
     publishDir params.outdir, mode: params.publish_dir_mode, saveAs: {
@@ -34,6 +33,7 @@ process VEP {
         path "${sample_id}.VEP.summary.html", emit: vepReport
 
     script:
+    // TODO: pass in channel..
     genome = params.genome
     """
     mkdir ${sample_id}
@@ -61,7 +61,7 @@ workflow {
         .map{file -> tuple(file.baseName, file)}
         .set{ ch_vcf }
 
-    GetSoftwareVersion()
+    VEP_VERSION()
     
     VEP( ch_vcf )
 }   

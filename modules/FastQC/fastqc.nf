@@ -39,7 +39,7 @@ process FASTQC_VERSION {
 }
 
 //
-// TODO: use ofx metamap
+// TODO: use ofx metamap ?
 //
 workflow test_fastqc_single_end {
     // meta map

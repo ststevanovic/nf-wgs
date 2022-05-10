@@ -1,6 +1,0 @@
-@HD	VN:1.6
-@SQ	SN:chr1	LN:1000	M5:cea67394536e3cf7d9ec923e3c61b90d	UR:file:/home/jelena/GATK-somatic-calling/work/c3/d65fa93933d6efc83777d0b7d7c8ca/test.fa
-@SQ	SN:chr2	LN:1000	M5:7a9a95ec98b34d1096d58282fd46d187	UR:file:/home/jelena/GATK-somatic-calling/work/c3/d65fa93933d6efc83777d0b7d7c8ca/test.fa
-@SQ	SN:chr3	LN:1000	M5:f46a415893d3344c5d26d76ffcd211fc	UR:file:/home/jelena/GATK-somatic-calling/work/c3/d65fa93933d6efc83777d0b7d7c8ca/test.fa
-@SQ	SN:chr4	LN:1000	M5:c90df872622cf57c40bd0f99c23c49b8	UR:file:/home/jelena/GATK-somatic-calling/work/c3/d65fa93933d6efc83777d0b7d7c8ca/test.fa
-@SQ	SN:chr5	LN:1000	M5:9584113688f0676935f2eca4be1c8ede	UR:file:/home/jelena/GATK-somatic-calling/work/c3/d65fa93933d6efc83777d0b7d7c8ca/test.fa

@@ -33,14 +33,14 @@ if (params.help) {
 assert (params.inpdir != null) : "please provide the --inpdir option" 
 
 process QUALIMAP {
-    label "standard"
-    tag "$bam_tag"
+    label "qualimap_run_settings"
+    tag "$sample_id"
 
     input:
-    tuple val(bam_tag), file(bam)
+    tuple val(sample_id), file(bam)
 
     output:
-    path ("${bam_tag}"), emit: qualimap_results
+    path ("${sample_id}"), emit: qualimap_results
 
     shell:
     mem_qm  = params.mem -2 //params.mem.intdiv(2)
@@ -56,7 +56,6 @@ workflow {
        .ifEmpty { error "Cannot find any bam file in: ${params.inpdir}" }
        .map{ file -> tuple(file.baseName, file) } 
        .groupTuple(by: 0)
-      //  .view{"$it"}
        .set{ bam_init }
 
   QUALIMAP( bam_init )

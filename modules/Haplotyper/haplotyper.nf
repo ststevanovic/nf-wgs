@@ -4,7 +4,7 @@ log.info """
   nextflow -log logs/hap.log run modules/Haplotyper/haplotyper.nf -entry haplotyper_module -c modules/Haplotyper/haplotyper.config
 """
 
-process HaplotypeCaller {
+process HAPLOTYPCALLER {
   tag "$sample"
 
   input:
@@ -19,7 +19,6 @@ process HaplotypeCaller {
   val(sample), emit: sample
 
   script:
-  int mem = (Runtime.getRuntime().totalMemory()) >> 30
   """
     gatk HaplotypeCaller \
     --java-options "-Xmx4g" \
@@ -56,7 +55,7 @@ workflow {
                 .set { ch_bai }
 
         
-        HaplotypeCaller( ch_bai, ch_fasta.collect(), ch_fai.collect(), ch_dict.collect() )
+        HAPLOTYPCALLER( ch_bai, ch_fasta.collect(), ch_fai.collect(), ch_dict.collect() )
         
 }
     

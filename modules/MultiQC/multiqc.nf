@@ -5,37 +5,36 @@
 */
 
 process MULTIQC {
-    input:
-    // path '*' 
-    // path '*' from fastqc_ch.collect()
-    file ('FastQC/*') // from fastqc_ch.collect().ifEmpty([])
+    // publishDir "${params.outdir}/Reports/MultiQC", mode: 'copy' should be defined inside config
+    // output dir from environemnt.config used...
+    container 'multiqc:v1.11'
 
-    // file ('QualimapResults/*') from qualimapResults.collect()
-        // file ('bamQC/*') from bamQCReport.collect().ifEmpty([])
-        // file ('TrimmedFastQC/*') from trimGaloreReport.collect().ifEmpty([])
-        // file ('MarkDuplicates/*') from duplicates_marked_report.collect().ifEmpty([])
-//         file ('DuplicatesMarked/*.recal.table') from baseRecalibratorReport.collect().ifEmpty([])
-        // file ('SamToolsStats/*') from samtoolsStatsReport.collect().ifEmpty([])
-//         file ('snpEff/*') from snpeffReport.collect().ifEmpty([])
-//         file ('VCFTools/*') from vcftoolsReport.collect().ifEmpty([])
+    input:
+    path files_path
+    // file ("FastQC/*") 
+    // file ('GATK/*') 
+    // file ('Haplotyper/*') 
+    // file ('Manta/*') 
+    // file ('Qualimap/*') 
+    // file ('GATK/*.recal_data.table') 
+    // file ('SNPeff/*') 
+    // file ('VEP/*') 
     
     output:
     path "*multiqc_report.html"                ,emit: report
     path "*_data"                              ,emit: data
     path "*_plots"              ,optional:true ,emit: plots
-    // path "versions.yml"                        ,emit: versions
+    path "versions.yml"                        ,emit: versions
 
     shell:
     '''
-    multiqc -v .
+    multiqc -v -f .
     '''
 }
 
-// process MULTIQC_VERSION {
-//     // if params version specified, run this
-
-//     shell:
-//     '''
-//     multiqc --version
-//     '''
-// }
+process MULTIQC_VERSION {
+    shell:
+    '''
+    multiqc --version
+    '''
+}
