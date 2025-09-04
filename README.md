@@ -60,10 +60,10 @@ The pipeline is written using Nextflow DSL2 and follows a modular design for reu
 ## Usage
 
 1. Clone the pipeline
-
-    git clone https://github.com/your-org/wgs-nextflow-pipeline.git
+```
+    git clone https://github.com/ststevanovic/nf-wgs.git
     cd wgs-nextflow-pipeline
-
+```
 2. Prepare your inputs
 
     - Place FASTQ files in `data/reads/`
@@ -72,7 +72,7 @@ The pipeline is written using Nextflow DSL2 and follows a modular design for reu
 
 3. Run the pipeline
 
-    nextflow run main.nf -profile standard
+    ```nextflow run main.nf -profile standard```
 
 ## Parameters
 
