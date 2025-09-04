@@ -1,0 +1,3 @@
+# WGS (basic )
+
+The genome, or genetic material, of an organism (bacteria, virus, potato, human) is made up of DNA. Each organism has a unique DNA sequence which is composed of bases (A, T, C, and G). If you know the sequence of the bases in an organism, you have identified its unique DNA fingerprint, or pattern. Determining the order of bases is called sequencing. Whole genome sequencing is a laboratory procedure that determines the order of bases in the genome of an organism in one process.

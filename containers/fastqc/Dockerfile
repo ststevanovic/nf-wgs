@@ -20,6 +20,11 @@ LABEL \
 ################## INSTALLATION ######################
 USER root
 
+# permissions
+# COPY copy file inside image, file needs to be in "."
+# COPY mycode /bin
+# ADD  similar to COPY, or from URL , avoid
+
 ENV ZIP=fastqc_v0.11.9.zip
 ENV URL=https://www.bioinformatics.babraham.ac.uk/projects/fastqc/
 ENV FOLDER=FastQC

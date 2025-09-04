@@ -1,13 +1,12 @@
-FROM ubuntu:latest 
+FROM ubuntu:20.04
 
 ENV \
     DST=/opt/samtools \
     VER=1.14
 
 LABEL \
-    version=$VER \
     software="samtools" \
-    software.version="0.11.9" \
+    software.version=$VER \
     about.summary="A a suite of programs for interacting with high-throughput sequencing data." \
     about.home="http://www.htslib.org/" \
     about.documentation="http://www.htslib.org/doc/" \
@@ -25,5 +24,4 @@ RUN cd samtools-$VER \
     && make \
     && make install 
 ENV PATH="$DST/bin:$PATH"
-# RUN export PATH="$DST/bin:${PATH}"
 # RUN cd /root && rm -r samtools-$VER 

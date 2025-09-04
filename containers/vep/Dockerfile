@@ -1,8 +1,4 @@
 FROM nfcore/base:1.12.1
-LABEL \
-    author="Maxime Garcia" \
-    description="VEP image for use in nf-core/sarek" \
-    maintainer="maxime.garcia@scilifelab.se"
 
 # Install the conda environment
 COPY environment.yml /

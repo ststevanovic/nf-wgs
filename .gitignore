@@ -1,6 +1,13 @@
 .nextflow/
 work/
-data/
 results/
 .nextflow.log*
+.nextflow*
 .vscode/
+
+junk.nf
+
+data/novak-bam-bai/
+
+test.nf
+logs/
